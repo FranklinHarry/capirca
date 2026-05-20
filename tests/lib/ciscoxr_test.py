@@ -105,6 +105,23 @@ term verb_term {
   verbatim:: ciscoxr " permit tcp any"
 }
 """
+
+GOOD_TERM_FRAGMENT_OFFSET = """
+term good-term-fragment-offset {
+  protocol:: tcp
+  fragment-offset:: 1-8191
+  action:: accept
+}
+"""
+
+GOOD_TERM_FRAGMENT_OFFSET_SINGULAR = """
+term good-term-fragment-offset {
+  protocol:: tcp
+  fragment-offset:: 3
+  action:: accept
+}
+"""
+
 EXPIRED_TERM = """
 term is_expired {
   expiration:: 2001-01-01
@@ -121,6 +138,7 @@ SUPPORTED_TOKENS = {
     'destination_port',
     'dscp_match',
     'expiration',
+    'fragment_offset',
     'icmp_code',
     'icmp_type',
     'next_ip',
@@ -438,6 +456,23 @@ class CiscoXRTest(absltest.TestCase):
     self.assertIn('permit tcp net-group NET6', acl_text)
     self.assertIn('4000::', acl_text)
     self.assertNotIn('NET4', acl_text)
+
+  def testFragmentOffset(self):
+    pol = policy.ParsePolicy(
+        GOOD_HEADER_1 + GOOD_TERM_FRAGMENT_OFFSET, self.naming
+    )
+    acl = ciscoxr.CiscoXR(pol, EXP_INFO)
+    expected = ' permit tcp any any fragment-offset range 1 8191'
+    self.assertIn(expected, str(acl), str(acl))
+
+  def testFragmentOffsetSingular(self):
+    pol = policy.ParsePolicy(
+        GOOD_HEADER_1 + GOOD_TERM_FRAGMENT_OFFSET_SINGULAR, self.naming
+    )
+    acl = ciscoxr.CiscoXR(pol, EXP_INFO)
+    expected = ' permit tcp any any fragment-offset eq 3'
+    self.assertIn(expected, str(acl), str(acl))
+
 
 if __name__ == '__main__':
   absltest.main()

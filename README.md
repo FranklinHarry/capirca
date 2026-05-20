@@ -314,8 +314,8 @@ refer to the generator specific documentation and code base.
         configured-neighbors-only).
 *   **ether-type**
     *   (Juniper only) specify matching ether-type(e.g. ether-type` arp).
-*   **fragement-offset**
-    *   (Juniper only) specify a fragment offset of a fragmented packet.
+*   **fragment-offset**
+    *   (Juniper, Cisco only) specify a fragment offset of a fragmented packet.
 *   **logging**
     *   (Juniper, speedway/iptables) specify that this packet should be logged
         via syslog.

@@ -637,6 +637,13 @@ class Term(aclgenerator.Term):
       else:
         self.options.append('dscp %s' % ' '.join(self.term.dscp_match))
 
+    if self.term.fragment_offset:
+      fragment_operator = 'range' if '-' in self.term.fragment_offset else 'eq'
+      fragment_argument = self.term.fragment_offset.replace('-', ' ')
+      self.options.append(
+          'fragment-offset %s %s' % (fragment_operator, fragment_argument)
+      )
+
     # icmp-types
     icmp_types = ['']
     if self.term.icmp_type:

@@ -60,7 +60,7 @@ class CiscoXR(cisco.Cisco):
     """
     supported_tokens, supported_sub_tokens = super()._BuildTokens()
 
-    supported_tokens |= {'next_ip'}
+    supported_tokens |= {'next_ip', 'fragment_offset'}
 
     return supported_tokens, supported_sub_tokens
 
